@@ -1,0 +1,5 @@
+TEMP_DATA/
+input/*
+__pycache__
+.env
+.DS_Store
