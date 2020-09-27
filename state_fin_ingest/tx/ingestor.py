@@ -46,15 +46,18 @@ class TexasIngestor(Ingestor):
                 if row[49] not in ["STATEREP", "STATESEN"]:
                     continue
 
+                if not row[50]:
+                    continue
+
                 this_dict = dict()
-                this_dict["filerId"] = row[1]
+                this_dict["candidate_id"] = row[1]
                 this_dict["name"] = row[3]
                 this_dict[
                     "party"
-                ] = "UNKNOWN"  # State of Texas makes it hard to figure out party
+                ] = "unknown"  # State of Texas makes it hard to figure out party
 
-                this_dict["office"] = "lower" if row[49] == "STATEREP" else "upper"
-                this_dict["district"] = row[50]
+                this_dict["house"] = "lower" if row[49] == "STATEREP" else "upper"
+                this_dict["district"] = int(row[50])
 
                 # this_dict["status"] = row[46]
 
@@ -76,13 +79,13 @@ class TexasIngestor(Ingestor):
                     continue
 
                 this_dict = dict()
-                this_dict["candidateId"] = row[9]
-                this_dict["committeeId"] = row[1]
+                this_dict["candidate_id"] = row[9]
+                this_dict["committee_id"] = row[1]
 
-                candId = this_dict["candidateId"]
+                candId = this_dict["candidate_id"]
                 if candId in self.candidate_dict:
                     print(
-                        f"Connecting {this_dict['candidateId']} to {this_dict['committeeId']}"
+                        f"Connecting {this_dict['candidate_id']} to {this_dict['committee_id']}"
                     )
 
                     print(f"{row[3]} to {row[11]}")
@@ -117,7 +120,7 @@ class TexasIngestor(Ingestor):
                     this_dict = dict()
 
                     this_dict["filer"] = {
-                        "filerId": row[6],
+                        "filer_id": row[6],
                         "type": row[7],
                         "name": row[8],
                     }
@@ -137,26 +140,26 @@ class TexasIngestor(Ingestor):
                         if row[6] not in self.spac_to_cand:
                             continue
 
-                        candidateId = self.spac_to_cand[row[6]]["candidateId"]
+                        candidate_id = self.spac_to_cand[row[6]]["candidate_id"]
 
-                        if candidateId not in self.candidate_dict:
+                        if candidate_id not in self.candidate_dict:
                             continue
-                        this_dict["candidate"] = self.candidate_dict[candidateId]
+                        this_dict["candidate"] = self.candidate_dict[candidate_id]
                         print(
                             f"CONNECTED {this_dict['candidate']['name']} to {this_dict['filer']['name']}"
                         )
                     else:
                         continue
 
-                    this_dict["contributionId"] = row[9]
+                    this_dict["contribution_id"] = row[9]
 
-                    this_dict["contributionDate"] = contrib_date.isoformat()
+                    this_dict["contribution_date"] = contrib_date.isoformat()
 
                     this_dict["amount"] = float(row[11])
                     this_dict["memo"] = row[12]
 
                     # Information about the contributor -- INDIVIDUAL OR ENTITY OR UNKNOWN
-                    this_dict["type"] = row[15]
+                    this_dict["type"] = row[15].lower()
 
                     if row[15] == "INDIVIDUAL":
                         this_dict["name"] = f"{row[19]} {row[17]}"
@@ -169,7 +172,7 @@ class TexasIngestor(Ingestor):
 
                     this_dict["employer"] = row[28]
                     this_dict["occupation"] = row[29]
-                    this_dict["jobTitle"] = row[30]
+                    this_dict["job_title"] = row[30]
 
                     yield this_dict
 

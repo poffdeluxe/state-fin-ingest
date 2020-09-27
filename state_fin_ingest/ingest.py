@@ -50,7 +50,7 @@ def cleanup_temp_data_dir():
 
 def flush_records(index, records):
     for rec in records:
-        rec_id = rec["contributionId"]
+        rec_id = rec["contribution_id"]
         es.index(index, rec, id=rec_id)
 
     print("Flushed")

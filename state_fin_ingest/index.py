@@ -1,14 +1,10 @@
 MAPPING_TEMPLATE = {
     "properties": {
-        "@timestamp": {"type": "date"},
         "amount": {"type": "double"},
         "candidate": {
             "properties": {
-                "district": {
-                    "type": "text",
-                    "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
-                },
-                "filerId": {
+                "district": {"type": "short"},
+                "candidate_id": {
                     "type": "text",
                     "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
                 },
@@ -16,7 +12,7 @@ MAPPING_TEMPLATE = {
                     "type": "text",
                     "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
                 },
-                "office": {
+                "house": {
                     "type": "text",
                     "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
                 },
@@ -31,12 +27,12 @@ MAPPING_TEMPLATE = {
             }
         },
         "city": {"type": "keyword"},
-        "contributionId": {"type": "keyword"},
-        "contributionDate": {"type": "date", "format": "iso8601"},
+        "contribution_id": {"type": "keyword"},
+        "contribution_date": {"type": "date", "format": "iso8601"},
         "employer": {"type": "text"},
         "filer": {
             "properties": {
-                "filerId": {
+                "filer_id": {
                     "type": "text",
                     "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
                 },
@@ -50,7 +46,7 @@ MAPPING_TEMPLATE = {
                 },
             }
         },
-        "jobTitle": {"type": "keyword"},
+        "job_title": {"type": "keyword"},
         "memo": {"type": "keyword"},
         "name": {
             "type": "text",
