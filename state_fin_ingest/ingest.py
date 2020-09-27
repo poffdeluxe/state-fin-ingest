@@ -4,6 +4,7 @@ import shutil
 from datetime import datetime
 
 from elasticsearch import Elasticsearch
+from elasticsearch.helpers import bulk
 
 from state_fin_ingest.tx.ingestor import TexasIngestor
 from state_fin_ingest.dir import TEMP_DIR
@@ -17,6 +18,7 @@ NUM_BEFORE_FLUSH = 500
 
 
 def create_new_index(prefix):
+    # TODO: Make this less nasty -- we're ripping out special characters from ISO8601 to make it index name friendly
     utc_now = datetime.now().isoformat()
     utc_now = re.sub(r"\W+", "", utc_now.lower())
 
@@ -49,10 +51,10 @@ def cleanup_temp_data_dir():
 
 
 def flush_records(index, records):
-    for rec in records:
-        rec_id = rec["contribution_id"]
-        es.index(index, rec, id=rec_id)
+    for r in records:
+        r['_id'] = r["contribution_id"]
 
+    bulk(es, index=index, actions=records)
     print("Flushed")
 
 
@@ -60,6 +62,7 @@ def run(state_code):
     print(f"Running ingestion system for: {state_code}")
     ingestor = code_to_ingestor[state_code]()
 
+    # TODO: We should probably wrap this process in a try-finally to clean up the created index if there's an exception
     prefix = ingestor.ingest_prefix
     index = create_new_index(prefix)
 
@@ -82,6 +85,7 @@ def run(state_code):
 
         records.append(record)
 
+        # TODO: The ES bulk helpers actually take care of this so I should call the streaming_bulk helper directly
         if ticker % NUM_BEFORE_FLUSH == 0:
             flush_records(index, records)
             records = []
