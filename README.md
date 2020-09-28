@@ -5,7 +5,7 @@ Contributions are loaded via state-specific "ingestors" which standardize and cl
 At the moment, only a few state ingestors are available but the goal is to be able to load contribution data for all 50 state legislatures.
 
 ## Getting started
-To get started, you need to have a .env file in the root direction with the `ES_HOST` variable that has the full path to the Elasticsearch cluster (including authentication).
+To get started, you need to have a .env file in the root directory with the `ES_HOST` variable that has the full path to the Elasticsearch cluster (including authentication).
 
 You'll also need `poetry` installed on your local machine.
 
