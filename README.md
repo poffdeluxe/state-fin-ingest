@@ -11,6 +11,8 @@ You'll also need `poetry` installed on your local machine.
 
 Running `poetry install` will install the dependencies.
 
+Before being able to run the ingestors, you will likely have to download the contribution data for the states you are interested in. The directory for each state ingestor contains a README.md that describes the files required for that state's ingestion
+
 To begin ingestion, run `poetry run python main.py`
 
 ## Gotchas / Known Issues

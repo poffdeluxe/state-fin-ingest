@@ -117,6 +117,10 @@ class TexasIngestor(Ingestor):
                     if contrib_date <= AFTER_DATE:
                         continue
 
+                    # Skip non-monetary contributions
+                    if row[2] == "A2":
+                        continue
+
                     this_dict = dict()
 
                     this_dict["filer"] = {
