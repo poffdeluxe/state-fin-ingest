@@ -13,6 +13,11 @@ Running `poetry install` will install the dependencies.
 
 To begin ingestion, run `poetry run python main.py`
 
+## Gotchas / Known Issues
+* We're only ingesting contributions that are linked to a candidate, candidate committee, or committee that's registered to support a candidate
+* We're not ingesting data around expenditures or other campaign finance data, only contributions
+* We're only ingesting data for state legislatures
+
 ## About the ingestion process
 Before an ingestor's state specific ingestion work is performed, the main ingest process will create a temporary directory for the work. The ingest process will also create a new index in the Elasticsearch cluster where the name is prefixed by the state code specified by the ingestor and is suffixed by a datetime string. (TODO: we should also validate files required by the ingestor exist before beginning the ingest process)
 

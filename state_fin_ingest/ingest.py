@@ -7,10 +7,12 @@ from elasticsearch import Elasticsearch
 from elasticsearch.helpers import bulk
 
 from state_fin_ingest.tx.ingestor import TexasIngestor
+from state_fin_ingest.mi.ingestor import MichiganIngestor
+
 from state_fin_ingest.dir import TEMP_DIR
 from state_fin_ingest.index import MAPPING_TEMPLATE
 
-code_to_ingestor = {"tx": TexasIngestor}
+code_to_ingestor = {"tx": TexasIngestor, "mi": MichiganIngestor}
 
 es = Elasticsearch(hosts=[os.getenv("ES_HOST")])
 
@@ -52,7 +54,7 @@ def cleanup_temp_data_dir():
 
 def flush_records(index, records):
     for r in records:
-        r['_id'] = r["contribution_id"]
+        r["_id"] = r["contribution_id"]
 
     bulk(es, index=index, actions=records)
     print("Flushed")
@@ -89,6 +91,10 @@ def run(state_code):
         if ticker % NUM_BEFORE_FLUSH == 0:
             flush_records(index, records)
             records = []
+
+    # Final flush
+    if len(records) > 0:
+        flush_records(index, records)
 
     print("Done ingesting")
 
