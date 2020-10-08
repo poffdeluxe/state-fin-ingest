@@ -5,7 +5,16 @@ Finance data for the Michigan legislature is available from the [Michigan Secret
 The contribution ZIP files are available here: https://miboecfr.nictusa.com/cfr/dumpall/cfrdetail/
 and a breakdown of the fields is here: https://miboecfr.nictusa.com/cfr/dumpall/cfrdetail/ReadMe_CONTRIBUTIONS.html
 
+The following contribution files required are:
+* 2019_mi_cfr_contributions_00.zip
+* 2019_mi_cfr_contributions_01.zip
+* 2020_mi_cfr_contributions_00.zip
+* 2020_mi_cfr_contributions_01.zip
+* 2020_mi_cfr_contributions_02.zip
+
 Candidate Summary ZIP file is available here: https://miboecfr.nictusa.com/cfr/dumpall/micfrcansummary.txt.zip
+
+Place all 6 of those ZIP files in the `input/mi` directory (create the `mi` directory if missing)
 
 ## Methodology
 We build a list of candidate committees from the report data (only looking at candidates with reports from Jan 1 2019) and then interate over the contribution files from 2019 and 2020.
