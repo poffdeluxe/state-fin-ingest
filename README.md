@@ -15,7 +15,7 @@ Before being able to run the ingestors, you will likely have to download the con
 
 To begin ingestion, run `poetry run python main.py`
 
-## Gotchas / Known Issues
+## Gotchas / Known Issues / Caveats
 * We're only ingesting contributions that are linked to a candidate, candidate committee, or committee that's registered to support a candidate
 * We're not ingesting data around expenditures or other campaign finance data, only contributions
 * We're only ingesting data for state legislatures
