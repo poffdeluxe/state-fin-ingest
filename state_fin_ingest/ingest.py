@@ -1,4 +1,6 @@
 import os
+import time
+import logging
 import re
 import shutil
 from datetime import datetime
@@ -11,6 +13,8 @@ from state_fin_ingest.mi.ingestor import MichiganIngestor
 
 from state_fin_ingest.dir import TEMP_DIR
 from state_fin_ingest.index import MAPPING_TEMPLATE
+
+logger = logging.getLogger(__name__)
 
 code_to_ingestor = {"tx": TexasIngestor, "mi": MichiganIngestor}
 
@@ -57,28 +61,28 @@ def flush_records(index, records):
         r["_id"] = r["contribution_id"]
 
     bulk(es, index=index, actions=records)
-    print("Flushed")
 
 
 def run(state_code):
-    print(f"Running ingestion system for: {state_code}")
+    logger.info(f"Running ingestion system for: {state_code}")
     ingestor = code_to_ingestor[state_code]()
 
     # TODO: We should probably wrap this process in a try-finally to clean up the created index if there's an exception
     prefix = ingestor.ingest_prefix
     index = create_new_index(prefix)
 
-    print(f"Index created: {index}")
+    logger.info(f"Index created: {index}")
 
     create_temp_data_dir()
 
-    print("Created temporary data directory")
+    logger.debug("Created temporary data directory")
 
-    print("Running ingestor's pre-work setup")
+    logger.info("Running ingestor's pre-work setup")
     ingestor.pre()
-    print("Done")
+    logger.info("Done")
 
-    print("Beginning ingestion work....")
+    logger.info("Begin ingesting records....")
+    start_time = time.perf_counter()
 
     ticker = 0
     records = []
@@ -96,15 +100,17 @@ def run(state_code):
     if len(records) > 0:
         flush_records(index, records)
 
-    print("Done ingesting")
+    end_time = time.perf_counter()
 
-    print("Beginning ingestor's post-work teardown")
+    logger.info("Done ingesting records.")
+    logger.info(f"Ingested {ticker} records in {end_time - start_time:0.4f} seconds")
+
     ingestor.post()
 
-    print("Deleting data in the temporary data directory")
+    logger.debug("Deleting data in the temporary data directory")
     cleanup_temp_data_dir()
 
-    print(f"Promoting {index} to {prefix}_contribs")
+    logger.info(f"Promoting {index} to {prefix}_contribs")
     promote_index(prefix, index)
 
-    print("INGESTION COMPLETE")
+    logger.info(f"Ingestion complete for {prefix}")

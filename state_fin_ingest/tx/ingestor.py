@@ -61,8 +61,6 @@ class TexasIngestor(Ingestor):
 
                 # this_dict["status"] = row[46]
 
-                print(f"Saving: {this_dict['name']}")
-
                 self.candidate_dict[row[1]] = this_dict
 
         # load candidate to committee mapping to dict
@@ -83,14 +81,6 @@ class TexasIngestor(Ingestor):
                 this_dict["committee_id"] = row[1]
 
                 candId = this_dict["candidate_id"]
-                if candId in self.candidate_dict:
-                    print(
-                        f"Connecting {this_dict['candidate_id']} to {this_dict['committee_id']}"
-                    )
-
-                    print(f"{row[3]} to {row[11]}")
-                else:
-                    print(f"missing {row[1]}")
 
                 self.spac_to_cand[row[1]] = this_dict
 
@@ -98,7 +88,6 @@ class TexasIngestor(Ingestor):
         contrib_files = glob.glob(f"{TEMP_DIR}/contrib*.csv")
 
         for c_file in contrib_files:
-            print(f"Now loading {c_file}")
             with open(f"{c_file}", "r") as f:
                 reader = csv.reader(f)
 
@@ -149,9 +138,6 @@ class TexasIngestor(Ingestor):
                         if candidate_id not in self.candidate_dict:
                             continue
                         this_dict["candidate"] = self.candidate_dict[candidate_id]
-                        print(
-                            f"CONNECTED {this_dict['candidate']['name']} to {this_dict['filer']['name']}"
-                        )
                     else:
                         continue
 

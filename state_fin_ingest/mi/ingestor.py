@@ -1,11 +1,14 @@
 import csv
 import glob
 import re
+import logging
 
 from datetime import datetime
 from zipfile import ZipFile
 from state_fin_ingest.ingestor import Ingestor
 from state_fin_ingest.dir import INPUT_DIR, TEMP_DIR
+
+logger = logging.getLogger(__name__)
 
 contrib_files = [
     "mi/2019_mi_cfr_contributions_00.zip",
@@ -104,7 +107,6 @@ class MichiganIngestor(Ingestor):
             with open(f"{TEMP_DIR}/{c_file}", "r", errors="replace") as f:
                 reader = csv.reader(f, delimiter="\t")
 
-                print(c_file)
                 # Skip header only in _00 files
                 if "_00.txt" in c_file:
                     next(reader)
@@ -116,7 +118,7 @@ class MichiganIngestor(Ingestor):
 
                     # There's a record with some really messed up formatting...
                     if row[0] == "486666" and row[2] == "9839":
-                        print("Skipped bad record")
+                        logger.debug("Skipped bad record")
                         continue
 
                     # Clean up our row
