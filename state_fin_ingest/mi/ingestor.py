@@ -98,7 +98,7 @@ class MichiganIngestor(Ingestor):
                     if row[8] == "Representative in State Legislature"
                     else "upper"
                 )
-                this_dict["district"] = district_re.findall(row[9])[0]
+                this_dict["district"] = int(district_re.findall(row[9])[0])
 
                 self.candidate_dict[row[0]] = this_dict
 
