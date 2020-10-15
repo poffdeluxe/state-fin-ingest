@@ -15,7 +15,7 @@ district_re = re.compile("^(\d+).*")
 
 
 class ReportIngestor(Ingestor):
-    required_files = [] 
+    required_files = []
 
     def pre(self):
         pass
@@ -60,8 +60,12 @@ class ReportIngestor(Ingestor):
 
                 this_dict["report_id"] = f"{row[0]}_{row[1]}"
 
-                this_dict["period_start_date"] = datetime.strptime(row[13], "%m/%d/%Y").isoformat()
-                this_dict["period_end_date"] = datetime.strptime(row[14], "%m/%d/%Y").isoformat()
+                this_dict["period_start_date"] = datetime.strptime(
+                    row[13], "%m/%d/%Y"
+                ).isoformat()
+                this_dict["period_end_date"] = datetime.strptime(
+                    row[14], "%m/%d/%Y"
+                ).isoformat()
 
                 this_dict["received_date"] = received_date.isoformat()
 
@@ -81,7 +85,6 @@ class ReportIngestor(Ingestor):
                 this_dict["ending_balance_amount"] = row[28]
 
                 yield this_dict
-
 
     def post(self):
         pass

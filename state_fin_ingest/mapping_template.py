@@ -110,6 +110,6 @@ REPORT_MAPPING_TEMPLATE = {
                     "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
                 },
             }
-        }
+        },
     }
 }

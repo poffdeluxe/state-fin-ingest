@@ -67,7 +67,9 @@ class ContribIngestor(Ingestor):
 
                         if candidate_id not in self.parent.candidate_dict:
                             continue
-                        this_dict["candidate"] = self.parent.candidate_dict[candidate_id]
+                        this_dict["candidate"] = self.parent.candidate_dict[
+                            candidate_id
+                        ]
                     else:
                         continue
 

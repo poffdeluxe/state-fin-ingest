@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 
 NUM_BEFORE_FLUSH = 500
 
+
 def flush_records(index, records):
     for r in records:
         # TODO: this could be much better

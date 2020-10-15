@@ -11,11 +11,7 @@ from .report_ingestor import ReportIngestor
 
 TEXAS_FILE_NAME = "tx/TEC_CF_CSV.zip"
 
-req_csvs = [
-    "filers.csv",
-    "spacs.csv",
-    "cover.csv"
-]
+req_csvs = ["filers.csv", "spacs.csv", "cover.csv"]
 
 AFTER_DATE = datetime(2018, 11, 6, 0, 0, 0)
 

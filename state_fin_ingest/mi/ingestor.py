@@ -87,6 +87,5 @@ class MichiganIngestor(RootIngestor):
 
                 self.candidate_dict[row[0]] = this_dict
 
-
     def post(self):
         pass

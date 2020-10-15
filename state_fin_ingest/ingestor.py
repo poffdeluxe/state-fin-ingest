@@ -16,11 +16,12 @@ class Ingestor:
     def post(self):
         pass
 
+
 class RootIngestor:
     def __init__(self):
         if self.contrib_ingestor_class:
             self.contrib_ingestor = self.contrib_ingestor_class(self)
-        
+
         if self.report_ingestor_class:
             self.report_ingestor = self.report_ingestor_class(self)
 

@@ -61,8 +61,12 @@ class ReportIngestor(Ingestor):
 
                 this_dict["report_id"] = row[2]
 
-                this_dict["period_start_date"] = datetime.strptime(row[21], "%Y%m%d").isoformat()
-                this_dict["period_end_date"] = datetime.strptime(row[22], "%Y%m%d").isoformat()
+                this_dict["period_start_date"] = datetime.strptime(
+                    row[21], "%Y%m%d"
+                ).isoformat()
+                this_dict["period_end_date"] = datetime.strptime(
+                    row[22], "%Y%m%d"
+                ).isoformat()
 
                 this_dict["received_date"] = received_date.isoformat()
 
