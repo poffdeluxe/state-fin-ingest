@@ -1,61 +1,37 @@
-MAPPING_TEMPLATE = {
-    "properties": {
-        "amount": {"type": "double"},
-        "candidate": {
-            "properties": {
-                "district": {"type": "short"},
-                "candidate_id": {
-                    "type": "text",
-                    "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
-                },
-                "name": {
-                    "type": "text",
-                    "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
-                },
-                "house": {
-                    "type": "text",
-                    "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
-                },
-                "party": {
-                    "type": "text",
-                    "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
-                },
-                "status": {
-                    "type": "text",
-                    "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
-                },
-            }
-        },
-        "city": {"type": "keyword"},
-        "contribution_id": {"type": "keyword"},
-        "contribution_date": {"type": "date", "format": "iso8601"},
-        "employer": {"type": "text"},
-        "filer": {
-            "properties": {
-                "filer_id": {
-                    "type": "text",
-                    "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
-                },
-                "name": {
-                    "type": "text",
-                    "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
-                },
-                "type": {
-                    "type": "text",
-                    "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
-                },
-            }
-        },
-        "job_title": {"type": "keyword"},
-        "memo": {"type": "keyword"},
-        "name": {
-            "type": "text",
-            "fields": {"keyword": {"type": "keyword", "ignore_above": 256}},
-        },
-        "occupation": {"type": "keyword"},
-        "state": {"type": "keyword"},
-        "type": {"type": "keyword"},
-        "zip": {"type": "keyword"},
-        "addtl_data": {"type": "object"},
+import os
+import re
+from datetime import datetime
+from elasticsearch import Elasticsearch
+
+es = Elasticsearch(hosts=[os.getenv("ES_HOST")])
+
+
+def get_index_name(prefix, ingestor_type):
+    env = os.getenv("INGEST_ENV", "dev")
+
+    # TODO: Make this less nasty -- we're ripping out special characters from ISO8601 to make it index name friendly
+    utc_now = datetime.now().isoformat()
+    utc_now = re.sub(r"\W+", "", utc_now.lower())
+
+    index_name = f"{prefix}_{ingestor_type}_{utc_now}_{env}"
+    return index_name
+
+
+def create_new_index(index_name, mapping_template):
+    body = {"mappings": mapping_template}
+
+    es.indices.create(index_name, body)
+
+    return index_name
+
+
+def promote_index(prefix, index, index_type):
+    env = os.getenv("INGEST_ENV", "dev")
+
+    actions = {
+        "actions": [
+            {"remove": {"index": "*", "alias": f"{prefix}_{index_type}_{env}"}},
+            {"add": {"index": index, "alias": f"{prefix}_{index_type}_{env}"}},
+        ]
     }
-}
+    es.indices.update_aliases(actions)

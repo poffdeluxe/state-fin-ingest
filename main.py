@@ -11,6 +11,8 @@ logging.basicConfig(level=LOGLEVEL)
 
 from state_fin_ingest.ingest import run, code_to_ingestor
 
+logger = logging.getLogger(__name__)
+
 available_states = code_to_ingestor.keys()
 
 parser = argparse.ArgumentParser(
@@ -26,6 +28,9 @@ parser.add_argument(
 )
 
 args = parser.parse_args()
+
+env = os.getenv("INGEST_ENV", "dev")
+logger.info(f"Ingest running in mode: {env}")
 
 for state in args.states:
     run(state)
