@@ -69,7 +69,7 @@ def run(state_code):
     logger.info("Done")
 
     # Ingest contributions
-    # run_contribs(ingestor)
+    run_contribs(ingestor)
 
     # Ingest reports
     run_reports(ingestor)
