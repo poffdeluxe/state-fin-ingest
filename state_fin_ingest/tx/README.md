@@ -12,3 +12,5 @@ We build a list of candidates and PACs from the filers.csv. Unfortunately, there
 We also connect candidates to SPACs by reading the spacs.csv file and looking to see if they support or assist a particular candidate.
 
 After that, we iterate over the contribution files and connect contributions to candidates where possible.
+
+In addition to contributions, the cover.csv file is used to ingest report data
