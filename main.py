@@ -6,10 +6,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Configure logging
-LOGLEVEL = os.environ.get('LOGLEVEL', 'INFO').upper()
+LOGLEVEL = os.environ.get("LOGLEVEL", "INFO").upper()
 logging.basicConfig(level=LOGLEVEL)
 
 from state_fin_ingest.ingest import run, code_to_ingestor
+
+logger = logging.getLogger(__name__)
 
 available_states = code_to_ingestor.keys()
 
@@ -26,6 +28,9 @@ parser.add_argument(
 )
 
 args = parser.parse_args()
+
+env = os.getenv("INGEST_ENV", "dev")
+logger.info(f"Ingest running in mode: {env}")
 
 for state in args.states:
     run(state)
